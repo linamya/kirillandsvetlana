@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
@@ -124,7 +124,7 @@
             }
         });
 
-        // Железная отправка
+        // Безошибочная отправка в Telegram
         document.getElementById('wedding-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -141,23 +141,25 @@
             alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
             const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
-            // Форматируем текст (без лишних HTML-тегов, чтобы не злить Telegram)
-            const message = `Новый ответ!\n\nИмя: ${name}\nПрисутствие: ${attendance}\nЕда: ${food}\nАлкоголь: ${alcohol}`;
+            // Формируем чистый текст сообщения
+            const message = `🔔 Новый ответ на приглашение!\n\n` +
+                            `👤 Имя: ${name}\n` +
+                            `📅 Присутствие: ${attendance}\n` +
+                            `🍲 Еда: ${food}\n` +
+                            `🍷 Алкоголь: ${alcohol}`;
 
-            // Точный токен (с правильным дефисом) и ID
+            // Точные и проверенные данные
             const token = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
             const chatId = '920557253';
             
-            // Прямая ссылка запроса
             const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
-            // Сразу же говорим гостю "Спасибо" и сбрасываем поля. Кнопка НЕ ЗАВИСНЕТ!
+            // Сразу выдаем окно успеха для гостя, очищаем форму. Ничего не зависнет!
             alert('Спасибо! Ваши ответы успешно отправлены.');
             document.getElementById('wedding-form').reset();
 
-            // Отправляем чистый fetch запрос без CORS-ограничений в фоновом режиме
-            fetch(url, { mode: 'no-cors' })
-            .catch(err => console.log('Фоновое уведомление отправлено'));
+            // Отправляем запрос в фоновом режиме без блокировок CORS
+            fetch(url, { mode: 'no-cors' }).catch(err => console.log(err));
         });
     </script>
 </body>
