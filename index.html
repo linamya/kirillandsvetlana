@@ -155,37 +155,52 @@
                 });
                 var alcoholText = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
-                var text = `🔔 *Новый ответ в анкеты Кирилла и Светланы!*\n\n` +
-                           `👤 *Имя и фамилия:* ${guestName}\n` +
-                           `❓ *Придет на свадьбу:* ${attendanceText}\n` +
-                           `🍲 *Еда:* ${foodText}\n` +
-                           `🍷 *Алкоголь:* ${alcoholText}`;
+                // Экранируем спецсимволы HTML, чтобы данные гостя
+                // никогда не ломали разметку сообщения в Telegram
+                function escapeHtml(str) {
+                    return String(str)
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                }
+
+                var text = `🔔 <b>Новый ответ в анкете Кирилла и Светланы!</b>\n\n` +
+                           `👤 <b>Имя и фамилия:</b> ${escapeHtml(guestName)}\n` +
+                           `❓ <b>Придет на свадьбу:</b> ${escapeHtml(attendanceText)}\n` +
+                           `🍲 <b>Еда:</b> ${escapeHtml(foodText)}\n` +
+                           `🍷 <b>Алкоголь:</b> ${escapeHtml(alcoholText)}`;
 
                 var url = `https://api.telegram.org/bot${token}/sendMessage`;
                 var data = {
                     chat_id: chatId,
                     text: text,
-                    parse_mode: 'Markdown'
+                    parse_mode: 'HTML'
                 };
 
                 fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(data),
+                    keepalive: true
                 })
                 .then(function(response) {
                     if (response.ok) {
                         alert('Спасибо! Ваш ответ успешно принят.');
                         form.reset();
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Отправить';
                     } else {
-                        alert('Ошибка при отправке. Пожалуйста, убедитесь, что вы нажали СТАРТ в боте @Kirilandsvetlanaa_bot');
+                        return response.json().then(function(err) {
+                            console.error('Telegram API error:', err);
+                            alert('Ошибка при отправке анкеты. Попробуйте ещё раз или напишите организаторам напрямую.');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Отправить';
+                        });
                     }
                 })
                 .catch(function(error) {
                     console.error('Ошибка:', error);
-                    alert('Произошла ошибка соединения. Проверьте интернет.');
-                })
-                .finally(function() {
+                    alert('Произошла ошибка соединения. Проверьте интернет и попробуйте ещё раз.');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Отправить';
                 });
