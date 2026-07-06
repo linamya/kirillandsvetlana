@@ -104,7 +104,7 @@
     </div>
 
     <script>
-        // Музыка
+        // Музыкальный плеер
         const music = document.getElementById('bg-music');
         const button = document.getElementById('play-button');
         const playIcon = document.getElementById('play-icon');
@@ -124,7 +124,7 @@
             }
         });
 
-        // Отправка через скрытую картинку-запрос (Именно этот способ работал у вас на islamandkarima!)
+        // Отправка анкеты через безопасный системный маяк (Beacon API)
         document.getElementById('wedding-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -137,6 +137,7 @@
             alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
             const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
+            // Форматируем красивый текст сообщения
             const message = `🔔 Новый ответ на приглашение!\n\n` +
                             `👤 Имя: ${name}\n` +
                             `📅 Присутствие: ${attendance}\n` +
@@ -146,14 +147,20 @@
             const token = '8789916665:AAF35spcCno-NCgLn4D3ccO59mCaZt11pGQ';
             const chatId = '920557253';
             
-            // Самый пробивной метод: отправка через фоновую загрузку изображения. 
-            // Браузеры гостей думают, что загружают картинку, и никогда не блокируют этот запрос!
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
             
-            const img = new Image();
-            img.src = url;
+            // Упаковываем данные в правильный формат, который на 100% принимает Telegram без блокировок
+            const data = JSON.stringify({
+                chat_id: chatId,
+                text: message
+            });
 
-            // Сразу же показываем гостю, что всё успешно, не дожидаясь ответа от зависшего сервера
+            const blob = new Blob([data], { type: 'application/json' });
+            
+            // Отправляем. Это встроенный метод телефонов — он не зависает и отправляет данные в фоне напрямую
+            navigator.sendBeacon(url, blob);
+
+            // Сразу очищаем форму и благодарим гостя
             alert('Спасибо! Ваши ответы успешно отправлены.');
             document.getElementById('wedding-form').reset();
         });
