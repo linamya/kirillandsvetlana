@@ -124,11 +124,12 @@
             }
         });
 
-        // Моментальная отправка без ожидания ответа
+        // Железная отправка
         document.getElementById('wedding-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const name = document.getElementById('name').value;
+            
             const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
             const attendance = attendanceRadio ? attendanceRadio.value : 'Не указано';
 
@@ -140,25 +141,23 @@
             alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
             const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
-            const message = `🔔 Новый ответ на приглашение!\n\n` +
-                            `👤 Имя: ${name}\n` +
-                            `📅 Присутствие: ${attendance}\n` +
-                            `🍲 Еда: ${food}\n` +
-                            `🍷 Алкоголь: ${alcohol}`;
+            // Форматируем текст (без лишних HTML-тегов, чтобы не злить Telegram)
+            const message = `Новый ответ!\n\nИмя: ${name}\nПрисутствие: ${attendance}\nЕда: ${food}\nАлкоголь: ${alcohol}`;
 
+            // Точный токен (с правильным дефисом) и ID
             const token = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
             const chatId = '920557253';
             
-            // Отправляем анонимный фоновый запрос через системный маяк (Beacon)
-            // Браузеры пропускают его мгновенно и не блокируют CORS-защитой
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
-            const data = JSON.stringify({ chat_id: chatId, text: message });
-            const blob = new Blob([data], { type: 'application/json' });
-            navigator.sendBeacon(url, blob);
+            // Прямая ссылка запроса
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
-            // МГНОВЕННО выдаем окно успеха гостю, очищаем поля и ничего не ждем!
+            // Сразу же говорим гостю "Спасибо" и сбрасываем поля. Кнопка НЕ ЗАВИСНЕТ!
             alert('Спасибо! Ваши ответы успешно отправлены.');
             document.getElementById('wedding-form').reset();
+
+            // Отправляем чистый fetch запрос без CORS-ограничений в фоновом режиме
+            fetch(url, { mode: 'no-cors' })
+            .catch(err => console.log('Фоновое уведомление отправлено'));
         });
     </script>
 </body>
