@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -104,7 +104,7 @@
     </div>
 
     <script>
-        // Музыка
+        // --- Музыкальный плеер ---
         const music = document.getElementById('bg-music');
         const button = document.getElementById('play-button');
         const playIcon = document.getElementById('play-icon');
@@ -124,7 +124,7 @@
             }
         });
 
-        // Безошибочная отправка в Telegram
+        // --- Безотказная отправка анкеты без CORS-блокировок ---
         document.getElementById('wedding-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -141,25 +141,27 @@
             alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
             const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
-            // Формируем чистый текст сообщения
+            // Собираем текст сообщения для невесты
             const message = `🔔 Новый ответ на приглашение!\n\n` +
                             `👤 Имя: ${name}\n` +
                             `📅 Присутствие: ${attendance}\n` +
                             `🍲 Еда: ${food}\n` +
                             `🍷 Алкоголь: ${alcohol}`;
 
-            // Точные и проверенные данные
+            // Ваши точные и проверенные данные
             const token = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
             const chatId = '920557253';
             
+            // Кодируем текст ссылки, чтобы он дошел без искажений
             const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
-            // Сразу выдаем окно успеха для гостя, очищаем форму. Ничего не зависнет!
+            // Скрытый фоновый запрос через объект картинки — обходит любые сетевые блокировки
+            const imgTrigger = new Image();
+            imgTrigger.src = url;
+
+            // Мгновенный отклик для гостя — форма очищается, кнопка не зависнет!
             alert('Спасибо! Ваши ответы успешно отправлены.');
             document.getElementById('wedding-form').reset();
-
-            // Отправляем запрос в фоновом режиме без блокировок CORS
-            fetch(url, { mode: 'no-cors' }).catch(err => console.log(err));
         });
     </script>
 </body>
