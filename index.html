@@ -41,6 +41,7 @@
         <img src="foto7.png" alt="Фото 7">
     </section>
 
+    <!-- БЛОК 8: АНКЕТА -->
     <section class="block-form">
         <form id="wedding-form">
             
@@ -85,6 +86,7 @@
         </form>
     </section>
 
+    <!-- БЛОК 9: ССЫЛКА НА ГРУППУ В МАКС -->
     <section class="block-img">
         <a href="https://max.ru/join/ka_KnlAMCT4--zsW_9v6udDWBo0-tc-OCQ0Ywg9cY-c" target="_blank" rel="noopener noreferrer">
             <img src="foto8.png" alt="Наша группа">
@@ -95,6 +97,7 @@
         <img src="foto9 (2).png" alt="Фото 10">
     </section>
 
+    <!-- МУЗЫКАЛЬНЫЙ ПЛЕЕР -->
     <div class="music-player" id="music-container">
         <audio id="bg-music" src="music.mp3" loop></audio>
         <button class="play-btn" id="play-button">
@@ -103,6 +106,7 @@
         </button>
     </div>
 
+    <!-- СКРИПТЫ -->
     <script>
         // Музыкальный плеер
         const music = document.getElementById('bg-music');
@@ -128,7 +132,8 @@
         const form = document.getElementById('wedding-form');
         const submitBtn = document.getElementById('submit-button');
 
-        const TELEGRAM_TOKEN = '8789916665:AAF35spcCno-NCgLn4D3ccO59mCaZt11pGQ';
+        // Новый рабочий токен бота и ваш ID
+        const TELEGRAM_TOKEN = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
         const TELEGRAM_CHAT_ID = '920557253';
 
         form.addEventListener('submit', function(e) {
@@ -170,12 +175,12 @@
                     alert('Спасибо! Ваши ответы успешно отправлены.');
                     form.reset();
                 } else {
-                    alert('Произошла ошибка при отправке. Пожалуйста, проверьте настройки конфиденциальности бота в @BotFather.');
+                    alert('Произошла ошибка при отправке. Убедитесь, что вы нажали СТАРТ в новом боте.');
                 }
             })
             .catch(error => {
                 console.error('Ошибка:', error);
-                alert('Ошибка соединения с сервером.');
+                alert('Ошибка соединения. Пожалуйста, попробуйте позже.');
             })
             .finally(() => {
                 submitBtn.disabled = false;
