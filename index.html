@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Приглашение</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -42,11 +42,11 @@
     </section>
 
     <section class="block-form">
-        <form id="wedding-form">
+        <form id="weddingForm">
             
             <div class="form-group">
-                <label for="name">Напишите имя и фамилию</label>
-                <input type="text" id="name" required placeholder="Ваше имя">
+                <label for="guestName">Напишите имя и фамилию</label>
+                <input type="text" id="guestName" required placeholder="Ваше имя">
             </div>
 
             <div class="form-group">
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="submit-btn">Отправить</button>
+            <button type="submit" class="survey-submit-btn">Отправить</button>
         </form>
     </section>
 
@@ -97,72 +97,100 @@
 
     <div class="music-player" id="music-container">
         <audio id="bg-music" src="music.mp3" loop></audio>
-        <button class="play-btn" id="play-button">
-            <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        <button class="play-btn" id="play-button" type="button">
+            <svg id="play-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
         </button>
     </div>
 
     <script>
-        // --- Музыкальный плеер ---
-        const music = document.getElementById('bg-music');
-        const button = document.getElementById('play-button');
-        const playIcon = document.getElementById('play-icon');
-        const pauseIcon = document.getElementById('pause-icon');
+        // --- Плеер ---
+        var music = document.getElementById('bg-music');
+        var button = document.getElementById('play-button');
+        var playIcon = document.getElementById('play-icon');
+        var pauseIcon = document.getElementById('pause-icon');
 
-        button.addEventListener('click', () => {
-            if (music.paused) {
-                music.play().catch(e => console.log(e));
-                playIcon.style.display = 'none';
-                pauseIcon.style.display = 'block';
-                button.classList.add('playing');
-            } else {
-                music.pause();
-                playIcon.style.display = 'block';
-                pauseIcon.style.display = 'none';
-                button.classList.remove('playing');
-            }
-        });
+        if (button && music) {
+            button.addEventListener('click', function() {
+                if (music.paused) {
+                    music.play().catch(function(e) { console.log(e); });
+                    playIcon.style.display = 'none';
+                    pauseIcon.style.display = 'block';
+                    button.classList.add('playing');
+                } else {
+                    music.pause();
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                    button.classList.remove('playing');
+                }
+            });
+        }
 
-        // --- Безотказная отправка анкеты без CORS-блокировок ---
-        document.getElementById('wedding-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // --- Стандартный рабочий Fetch из вашего прошлого шаблона ---
+        var token = "8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww";
+        var chatId = "920557253";
+        var form = document.getElementById('weddingForm');
 
-            const name = document.getElementById('name').value;
-            
-            const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
-            const attendance = attendanceRadio ? attendanceRadio.value : 'Не указано';
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            const foodRadio = document.querySelector('input[name="food"]:checked');
-            const food = foodRadio ? foodRadio.value : 'Не указано';
+                var submitBtn = form.querySelector('.survey-submit-btn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Отправка...';
 
-            const alcoholCheckboxes = document.querySelectorAll('input[name="alcohol"]:checked');
-            const alcoholList = [];
-            alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
-            const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
+                var guestNameInput = document.getElementById('guestName');
+                var guestName = guestNameInput ? guestNameInput.value.trim() : 'Не указано';
+                
+                var attendanceRadio = form.querySelector('input[name="attendance"]:checked');
+                var attendanceText = attendanceRadio ? attendanceRadio.value : 'Не указано';
 
-            // Собираем текст сообщения для невесты
-            const message = `🔔 Новый ответ на приглашение!\n\n` +
-                            `👤 Имя: ${name}\n` +
-                            `📅 Присутствие: ${attendance}\n` +
-                            `🍲 Еда: ${food}\n` +
-                            `🍷 Алкоголь: ${alcohol}`;
+                var foodRadio = form.querySelector('input[name="food"]:checked');
+                var foodText = foodRadio ? foodRadio.value : 'Не указано';
 
-            // Ваши точные и проверенные данные
-            const token = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
-            const chatId = '920557253';
-            
-            // Кодируем текст ссылки, чтобы он дошел без искажений
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+                var alcoholCheckboxes = form.querySelectorAll('input[name="alcohol"]:checked');
+                var alcoholList = [];
+                alcoholCheckboxes.forEach(function(cb) {
+                    alcoholList.push(cb.value);
+                });
+                var alcoholText = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
-            // Скрытый фоновый запрос через объект картинки — обходит любые сетевые блокировки
-            const imgTrigger = new Image();
-            imgTrigger.src = url;
+                var text = `🔔 *Новый ответ в анкеты Кирилла и Светланы!*\n\n` +
+                           `👤 *Имя и фамилия:* ${guestName}\n` +
+                           `❓ *Придет на свадьбу:* ${attendanceText}\n` +
+                           `🍲 *Еда:* ${foodText}\n` +
+                           `🍷 *Алкоголь:* ${alcoholText}`;
 
-            // Мгновенный отклик для гостя — форма очищается, кнопка не зависнет!
-            alert('Спасибо! Ваши ответы успешно отправлены.');
-            document.getElementById('wedding-form').reset();
-        });
+                var url = `https://api.telegram.org/bot${token}/sendMessage`;
+                var data = {
+                    chat_id: chatId,
+                    text: text,
+                    parse_mode: 'Markdown'
+                };
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                .then(function(response) {
+                    if (response.ok) {
+                        alert('Спасибо! Ваш ответ успешно принят.');
+                        form.reset();
+                    } else {
+                        alert('Ошибка при отправке. Пожалуйста, убедитесь, что вы нажали СТАРТ в боте @Kirilandsvetlanaa_bot');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка соединения. Проверьте интернет.');
+                })
+                .finally(function() {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить';
+                });
+            });
+        }
     </script>
 </body>
 </html>
