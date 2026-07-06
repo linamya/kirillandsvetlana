@@ -1,0 +1,151 @@
+/* Общие настройки для мобильной версии */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Comfortaa', sans-serif;
+    background-color: #f9f9f9; /* Мягкий светлый фон */
+    color: #333333;
+    max-width: 480px; /* Ограничение под формат мобильного телефона */
+    margin: 0 auto;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Настройки блоков с фото */
+.block-img {
+    width: 100%;
+    display: block;
+    line-height: 0; /* Убирает микро-зазоры между картинками */
+}
+
+.block-img img, 
+.block-img a {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Стилизация анкеты (Блок 8) */
+.block-form {
+    padding: 40px 20px;
+    background-color: #F5F5F5;
+}
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+/* Поле ввода имени */
+input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #888;
+}
+
+/* Стили для радиокнопок и чекбоксов */
+.radio-group label, 
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 300;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.radio-group input, 
+.checkbox-group input {
+    margin-right: 12px;
+    width: 18px;
+    height: 18px;
+    accent-color: #333; /* Цвет галочки/точки */
+}
+
+/* Кнопка отправки */
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    font-family: 'Comfortaa', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #32170C;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: background-color 0.3s;
+}
+
+.submit-btn:active {
+    background-color: #555;
+}
+
+/* Круглый музыкальный плеер */
+.music-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.play-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.2s, background-color 0.3s;
+}
+
+.play-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #333;
+}
+
+/* Эффект пульсации, когда музыка играет */
+.play-btn.playing {
+    animation: pulse 2s infinite;
+    background-color: #fff;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.2);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}

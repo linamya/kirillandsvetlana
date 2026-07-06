@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Приглашение</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <section class="block-img">
+        <img src="foto1.png" alt="Фото 1">
+    </section>
+
+    <section class="block-img">
+        <img src="foto2.png" alt="Фото 2">
+    </section>
+
+    <section class="block-img">
+        <a href="https://yandex.ru/maps/org/sherri/1059834533/?ll=39.731542%2C54.632711&z=16" target="_blank" rel="noopener noreferrer">
+            <img src="foto3.png" alt="Адрес на карте">
+        </a>
+    </section>
+
+    <section class="block-img">
+        <img src="foto4.png" alt="Фото 4">
+    </section>
+
+    <section class="block-img">
+        <img src="foto5.png" alt="Фото 5">
+    </section>
+
+    <section class="block-img">
+        <img src="foto6.png" alt="Фото 6">
+    </section>
+
+    <section class="block-img">
+        <img src="foto7.png" alt="Фото 7">
+    </section>
+
+    <!-- Блок с анкетой -->
+    <section class="block-form">
+        <form id="wedding-form">
+            
+            <div class="form-group">
+                <label for="name">Напишите имя и фамилию</label>
+                <input type="text" id="name" name="name" required placeholder="Ваше имя">
+            </div>
+
+            <div class="form-group">
+                <label>Сможете ли присутствовать на свадьбе?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="attendance" value="С удовольствием приду" required> С удовольствием приду</label>
+                    <label><input type="radio" name="attendance" value="К сожалению, не смогу"> К сожалению, не смогу</label>
+                    <label><input type="radio" name="attendance" value="Сообщу позже"> Сообщу позже</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Есть ли у Вас особые предпочтения по еде?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="food" value="Нет" required> Нет</label>
+                    <label><input type="radio" name="food" value="Ем мясо"> Ем мясо</label>
+                    <label><input type="radio" name="food" value="Ем рыбу"> Ем рыбу</label>
+                    <label><input type="radio" name="food" value="Вегетарианец"> Вегетарианец</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Какой алкоголь Вы предпочитаете?</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="alcohol" value="Красное вино"> Красное вино</label>
+                    <label><input type="checkbox" name="alcohol" value="Белое вино"> Белое вино</label>
+                    <label><input type="checkbox" name="alcohol" value="Шампанское"> Шампанское</label>
+                    <label><input type="checkbox" name="alcohol" value="Виски"> Виски</label>
+                    <label><input type="checkbox" name="alcohol" value="Коньяк"> Коньяк</label>
+                    <label><input type="checkbox" name="alcohol" value="Водка"> Водка</label>
+                    <label><input type="checkbox" name="alcohol" value="Не пью алкоголь"> Не пью алкоголь</label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submit-button">Отправить</button>
+        </form>
+    </section>
+
+    <section class="block-img">
+        <a href="https://max.ru/join/xopkpZFzUXBKXuT403UkkCjelhlmtTMox5ofDtGzCZE" target="_blank" rel="noopener noreferrer">
+            <img src="foto8.png" alt="Наша группа">
+        </a>
+    </section>
+
+    <section class="block-img">
+        <img src="foto9.png" alt="Фото 10">
+    </section>
+
+    <div class="music-player" id="music-container">
+        <audio id="bg-music" src="music.mp3" loop></audio>
+        <button class="play-btn" id="play-button">
+            <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+    </div>
+
+    <script>
+        // --- Логика музыкального плеера ---
+        const music = document.getElementById('bg-music');
+        const button = document.getElementById('play-button');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        button.addEventListener('click', () => {
+            if (music.paused) {
+                music.play();
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                button.classList.add('playing');
+            } else {
+                music.pause();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+                button.classList.remove('playing');
+            }
+        });
+
+        // --- Логика отправки анкеты в Telegram ---
+        const form = document.getElementById('wedding-form');
+        const submitBtn = document.getElementById('submit-button');
+
+        // Данные вашего бота
+        const TELEGRAM_TOKEN = '8789916665:AAF35spcCno-NCgLn4D3ccO59mCaZt11pGQ';
+        const TELEGRAM_CHAT_ID = '920557253';
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // Отключаем перезагрузку страницы
+
+            // Меняем состояние кнопки во время отправки
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Отправка...';
+
+            // Получаем имя
+            const name = document.getElementById('name').value;
+
+            // Получаем выбранный вариант присутствия
+            const attendance = document.querySelector('input[name="attendance"]:checked').value;
+
+            // Получаем предпочтения в еде
+            const food = document.querySelector('input[name="food"]:checked').value;
+
+            // Получаем все выбранные галочки алкоголя
+            const alcoholCheckboxes = document.querySelectorAll('input[name="alcohol"]:checked');
+            const alcoholList = [];
+            alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
+            const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
+
+            // Формируем красивый текст сообщения для Telegram[cite: 1]
+            const message = `🔔 <b>Новый ответ на приглашение!</b>\n\n` +
+                            `👤 <b>Имя:</b> ${name}\n` +
+                            `📅 <b>Присутствие:</b> ${attendance}\n` +
+                            `🍲 <b>Еда:</b> ${food}\n` +
+                            `🍷 <b>Алкоголь:</b> ${alcohol}`;
+
+            // URL для отправки запроса к API Telegram[cite: 1]
+            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
+
+            // Отправляем данные методом POST[cite: 1]
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: 'HTML' // Чтобы работал жирный шрифт в Telegram[cite: 1]
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Спасибо! Ваши ответы успешно отправлены.');
+                    form.reset(); // Очищаем поля формы[cite: 1]
+                } else {
+                    alert('Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Ошибка соединения с сервером.');
+            })
+            .finally(() => {
+                // Возвращаем кнопку в исходное состояние[cite: 1]
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Отправить';
+            });
+        });
+    </script>
+</body>
+</html>
