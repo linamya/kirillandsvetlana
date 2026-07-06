@@ -42,11 +42,14 @@
     </section>
 
     <section class="block-form">
-        <form id="wedding-form">
+        <form action="https://api.telegram.org/bot8789916665:AAF35spcCno-NCgLn4D3ccO59mCaZt11pGQ/sendMessage" method="GET">
             
+            <input type="hidden" name="chat_id" value="920557253">
+            <input type="hidden" name="text" id="telegram-text-input" value="">
+
             <div class="form-group">
                 <label for="name">Напишите имя и фамилию</label>
-                <input type="text" id="name" name="name" required placeholder="Ваше имя">
+                <input type="text" id="name" required placeholder="Ваше имя">
             </div>
 
             <div class="form-group">
@@ -112,7 +115,7 @@
 
         button.addEventListener('click', () => {
             if (music.paused) {
-                music.play().catch(e => console.log("Музыка заблокирована браузером до первого клика:", e));
+                music.play().catch(e => console.log("Музыка остановлена до взаимодействия:", e));
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
                 button.classList.add('playing');
@@ -124,59 +127,33 @@
             }
         });
 
-        // --- Логика безотказной отправки анкеты в Telegram ---
-        const form = document.getElementById('wedding-form');
-        const submitBtn = document.getElementById('submit-button');
+        // --- Логика сборки текста перед отправкой ---
+        const form = document.querySelector('form');
+        const telegramInput = document.getElementById('telegram-text-input');
 
-        const TELEGRAM_TOKEN = '8789916665:AAF35spcCno-NCgLn4D3ccO59mCaZt11pGQ';
-        const TELEGRAM_CHAT_ID = '920557253';
-
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Отключаем перезагрузку страницы
-
-            // Блокируем кнопку, чтобы гость не нажал много раз подряд
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Отправка...';
-
+        form.addEventListener('submit', function() {
             const name = document.getElementById('name').value;
-            const attendance = document.querySelector('input[name="attendance"]:checked').value;
-            const food = document.querySelector('input[name="food"]:checked').value;
+            
+            const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
+            const attendance = attendanceRadio ? attendanceRadio.value : 'Не указано';
+            
+            const foodRadio = document.querySelector('input[name="food"]:checked');
+            const food = foodRadio ? foodRadio.value : 'Не указано';
 
             const alcoholCheckboxes = document.querySelectorAll('input[name="alcohol"]:checked');
             const alcoholList = [];
             alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
             const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
-            // Формируем чистый текст сообщения без HTML тегов (для максимальной совместимости)
+            // Формируем финальное сообщение
             const message = `🔔 Новый ответ на приглашение!\n\n` +
                             `👤 Имя: ${name}\n` +
                             `📅 Присутствие: ${attendance}\n` +
                             `🍲 Еда: ${food}\n` +
                             `🍷 Алкоголь: ${alcohol}`;
 
-            // Используем GET запрос. Он работает прямо через адресную строку, поэтому легко обходит защиты безопасности на телефонах гостей
-            const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
-
-            fetch(url, {
-                method: 'GET'
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Спасибо! Ваши ответы успешно отправлены.');
-                    form.reset(); // Очищаем форму после успеха
-                } else {
-                    alert('Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз.');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                alert('Не удалось отправить. Проверьте интернет-соединение.');
-            })
-            .finally(() => {
-                // В любом случае возвращаем кнопку в активное состояние
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Отправить';
-            });
+            // Помещаем текст в скрытое поле формы, которое автоматически улетит в Telegram
+            telegramInput.value = message;
         });
     </script>
 </body>
