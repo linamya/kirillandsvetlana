@@ -41,7 +41,7 @@
         <img src="foto7.png" alt="Фото 7">
     </section>
 
-    <!-- Блок с анкетой -->
+    <!-- БЛОК 8: АНКЕТА -->
     <section class="block-form">
         <form id="wedding-form">
             
@@ -86,8 +86,9 @@
         </form>
     </section>
 
+    <!-- БЛОК 9: ССЫЛКА НА ГРУППУ В МАКС -->
     <section class="block-img">
-        <a href="https://max.ru/join/xopkpZFzUXBKXuT403UkkCjelhlmtTMox5ofDtGzCZE" target="_blank" rel="noopener noreferrer">
+        <a href="https://max.ru/join/ka_KnlAMCT4--zsW_9v6udDWBo0-tc-OCQ0Ywg9cY-c" target="_blank" rel="noopener noreferrer">
             <img src="foto8.png" alt="Наша группа">
         </a>
     </section>
@@ -96,6 +97,7 @@
         <img src="foto9 (2).png" alt="Фото 10">
     </section>
 
+    <!-- ПЛЕЕР -->
     <div class="music-player" id="music-container">
         <audio id="bg-music" src="music.mp3" loop></audio>
         <button class="play-btn" id="play-button">
@@ -104,8 +106,9 @@
         </button>
     </div>
 
+    <!-- СКРИПТЫ ДЛЯ ПЛЕЕРА И ОТПРАВКИ В ТЕЛЕГРАМ -->
     <script>
-        // --- Логика музыкального плеера ---
+        // Управление музыкой
         const music = document.getElementById('bg-music');
         const button = document.getElementById('play-button');
         const playIcon = document.getElementById('play-icon');
@@ -113,7 +116,7 @@
 
         button.addEventListener('click', () => {
             if (music.paused) {
-                music.play();
+                music.play().catch(e => console.log("Ошибка воспроизведения:", e));
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
                 button.classList.add('playing');
@@ -125,64 +128,51 @@
             }
         });
 
-        // --- Логика отправки анкеты в Telegram ---
+        // Отправка данных в телеграм-бот
         const form = document.getElementById('wedding-form');
         const submitBtn = document.getElementById('submit-button');
 
-        // Данные вашего бота
         const TELEGRAM_TOKEN = '8789916665:AAF35spcCno-NCgLn4D3ccO59mCaZt11pGQ';
         const TELEGRAM_CHAT_ID = '920557253';
 
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // Отключаем перезагрузку страницы
+            e.preventDefault();
 
-            // Меняем состояние кнопки во время отправки
             submitBtn.disabled = true;
             submitBtn.innerText = 'Отправка...';
 
-            // Получаем имя
             const name = document.getElementById('name').value;
-
-            // Получаем выбранный вариант присутствия
             const attendance = document.querySelector('input[name="attendance"]:checked').value;
-
-            // Получаем предпочтения в еде
             const food = document.querySelector('input[name="food"]:checked').value;
 
-            // Получаем все выбранные галочки алкоголя
             const alcoholCheckboxes = document.querySelectorAll('input[name="alcohol"]:checked');
             const alcoholList = [];
             alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
             const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
 
-            // Формируем красивый текст сообщения для Telegram[cite: 1]
             const message = `🔔 <b>Новый ответ на приглашение!</b>\n\n` +
                             `👤 <b>Имя:</b> ${name}\n` +
                             `📅 <b>Присутствие:</b> ${attendance}\n` +
                             `🍲 <b>Еда:</b> ${food}\n` +
                             `🍷 <b>Алкоголь:</b> ${alcohol}`;
 
-            // URL для отправки запроса к API Telegram[cite: 1]
             const url = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
 
-            // Отправляем данные методом POST[cite: 1]
             fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: TELEGRAM_CHAT_ID,
                     text: message,
-                    parse_mode: 'HTML' // Чтобы работал жирный шрифт в Telegram[cite: 1]
+                    parse_mode: 'HTML'
                 })
             })
             .then(response => {
                 if (response.ok) {
                     alert('Спасибо! Ваши ответы успешно отправлены.');
-                    form.reset(); // Очищаем поля формы[cite: 1]
+                    form.reset();
                 } else {
-                    alert('Произошла ошибка при отправке. Пожалуйста, попробуйте еще раз.');
+                    alert('Произошла ошибка при отправке в Telegram. Пожалуйста, напишите /start вашему боту в Telegram.');
                 }
             })
             .catch(error => {
@@ -190,7 +180,6 @@
                 alert('Ошибка соединения с сервером.');
             })
             .finally(() => {
-                // Возвращаем кнопку в исходное состояние[cite: 1]
                 submitBtn.disabled = false;
                 submitBtn.innerText = 'Отправить';
             });
