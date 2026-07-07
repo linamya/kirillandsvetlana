@@ -148,17 +148,32 @@
 
             const token = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
             const chatId = '920557253';
-            
-            // Отправляем анонимный фоновый запрос через системный маяк (Beacon)
-            // Браузеры пропускают его мгновенно и не блокируют CORS-защитой
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
-            const data = JSON.stringify({ chat_id: chatId, text: message });
-            const blob = new Blob([data], { type: 'application/json' });
-            navigator.sendBeacon(url, blob);
 
-            // МГНОВЕННО выдаем окно успеха гостю, очищаем поля и ничего не ждем!
-            alert('Спасибо! Ваши ответы успешно отправлены.');
-            document.getElementById('wedding-form').reset();
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
+
+            // GET-запрос — простой (simple) запрос, не требует preflight (OPTIONS),
+            // поэтому не блокируется браузером, в отличие от JSON через POST/sendBeacon.
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${encodeURIComponent(chatId)}&text=${encodeURIComponent(message)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                    if (result.ok) {
+                        alert('Спасибо! Ваши ответы успешно отправлены.');
+                        document.getElementById('wedding-form').reset();
+                    } else {
+                        alert('Не удалось отправить анкету. Попробуйте ещё раз или свяжитесь с нами напрямую.');
+                    }
+                })
+                .catch(() => {
+                    alert('Не удалось отправить анкету (проблема с интернет-соединением). Попробуйте ещё раз или свяжитесь с нами напрямую.');
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Отправить';
+                });
         });
     </script>
 </body>
