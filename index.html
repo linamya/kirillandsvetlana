@@ -146,28 +146,34 @@
                             `🍲 Еда: ${food}\n` +
                             `🍷 Алкоголь: ${alcohol}`;
 
-            const token = '8757161572:AAEmqgBp2WO4FYKQSExYf2_FJdZC8-BJ-ww';
-            const chatId = '920557253';
+            // ==== Настройки VK-бота ====
+            const vkToken = 'vk1.a.ZLe9gOgc-Z9CfcVkHgZ6rfLXoMXekGT5nqIo3D4iiMV8yKmpvNnr0touo0ARSEatsTww_lCpqwgvcLWohcVIhdbfRVfcSyE2oSsU8xLLEfPv0bckqNvF8F7ASAgZC5UcCeG49t3YS6uKxJOHDTKXVDpB7jwN3auOUrsIg0ht_wlqdCWy0wXdD-OizyvZZbcfUKnL2mlCRP1MnqtoLIldQQ';
+            const vkUserId = '431263671';
+            const vkGroupId = '240097094'; // числовой ID вашего сообщества, без минуса
+            const vkApiVersion = '5.199';
 
             const submitBtn = document.querySelector('.submit-btn');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
 
             // GET-запрос — простой (simple) запрос, не требует preflight (OPTIONS),
-            // поэтому не блокируется браузером, в отличие от JSON через POST/sendBeacon.
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${encodeURIComponent(chatId)}&text=${encodeURIComponent(message)}`;
+            // поэтому не блокируется браузером.
+            const randomId = Math.floor(Math.random() * 2147483647);
+            const url = `https://api.vk.com/method/messages.send?user_id=${encodeURIComponent(vkUserId)}&random_id=${randomId}&message=${encodeURIComponent(message)}&group_id=${encodeURIComponent(vkGroupId)}&access_token=${encodeURIComponent(vkToken)}&v=${vkApiVersion}`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(result => {
-                    if (result.ok) {
+                    if (result.response) {
                         alert('Спасибо! Ваши ответы успешно отправлены.');
                         document.getElementById('wedding-form').reset();
                     } else {
+                        console.error('VK API error:', result.error);
                         alert('Не удалось отправить анкету. Попробуйте ещё раз или свяжитесь с нами напрямую.');
                     }
                 })
-                .catch(() => {
+                .catch((err) => {
+                    console.error('Network error:', err);
                     alert('Не удалось отправить анкету (проблема с интернет-соединением). Попробуйте ещё раз или свяжитесь с нами напрямую.');
                 })
                 .finally(() => {
