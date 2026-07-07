@@ -156,30 +156,40 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
 
-            // GET-запрос — простой (simple) запрос, не требует preflight (OPTIONS),
-            // поэтому не блокируется браузером.
             const randomId = Math.floor(Math.random() * 2147483647);
             const url = `https://api.vk.com/method/messages.send?user_id=${encodeURIComponent(vkUserId)}&random_id=${randomId}&message=${encodeURIComponent(message)}&group_id=${encodeURIComponent(vkGroupId)}&access_token=${encodeURIComponent(vkToken)}&v=${vkApiVersion}`;
 
-            fetch(url)
-                .then(response => response.json())
-                .then(result => {
-                    if (result.response) {
-                        alert('Спасибо! Ваши ответы успешно отправлены.');
-                        document.getElementById('wedding-form').reset();
-                    } else {
-                        console.error('VK API error:', result.error);
-                        alert('Не удалось отправить анкету. Попробуйте ещё раз или свяжитесь с нами напрямую.');
-                    }
-                })
-                .catch((err) => {
-                    console.error('Network error:', err);
-                    alert('Не удалось отправить анкету (проблема с интернет-соединением). Попробуйте ещё раз или свяжитесь с нами напрямую.');
-                })
-                .finally(() => {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Отправить';
-                });
+            // Пробуем отправить до 4 раз подряд — иногда сеть/браузер обрывает
+            // соединение с первого раза, повтор чаще всего проходит успешно.
+            function trySend(attempt) {
+                fetch(url)
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.response) {
+                            alert('Спасибо! Ваши ответы успешно отправлены.');
+                            document.getElementById('wedding-form').reset();
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Отправить';
+                        } else {
+                            console.error('VK API error:', result.error);
+                            alert('Не удалось отправить анкету. Попробуйте ещё раз или свяжитесь с нами напрямую.');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Отправить';
+                        }
+                    })
+                    .catch((err) => {
+                        console.error(`Попытка ${attempt} не удалась:`, err);
+                        if (attempt < 4) {
+                            setTimeout(() => trySend(attempt + 1), 800);
+                        } else {
+                            alert('Не удалось отправить анкету (проблема с интернет-соединением). Попробуйте ещё раз или свяжитесь с нами напрямую.');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Отправить';
+                        }
+                    });
+            }
+
+            trySend(1);
         });
     </script>
 </body>
