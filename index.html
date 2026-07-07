@@ -1,135 +1,165 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
- <title>Приглашение</title>
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet"> <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Приглашение</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
- <section class="block-img">
- <img src="foto1.png" alt="Фото 1">
- </section>
- <section class="block-img">
- <img src="foto2.png" alt="Фото 2">
- </section>
- <section class="block-img">
- <a href="https://yandex.ru/maps/org/sherri/1059834533/?ll=39.731542%2C54.632711&z=16" target="_blank" re <img src="foto3.png" alt="Адрес на карте">
- </a>
- </section>
- <section class="block-img">
- <img src="foto4.png" alt="Фото 4">
- </section>
- <section class="block-img">
- <img src="foto5.png" alt="Фото 5">
- </section>
- <section class="block-img">
- <img src="foto6.png" alt="Фото 6">
- </section>
- <section class="block-img">
- <img src="foto7.png" alt="Фото 7">
- </section>
- <section class="block-form">
- <form id="wedding-form">
 
- <div class="form-group">
- <label for="name">Напишите имя и фамилию</label>
- <input type="text" id="name" required placeholder="Ваше имя">
- </div>
- <div class="form-group">
- <label>Сможете ли присутствовать на свадьбе?</label>
- <div class="radio-group">
- <label><input type="radio" name="attendance" value="С удовольствием приду" required> С удовольст <label><input type="radio" name="attendance" value="К сожалению, не смогу"> К сожалению, не смог <label><input type="radio" name="attendance" value="Сообщу позже"> Сообщу позже</label>
- </div>
- </div>
- <div class="form-group">
- <label>Есть ли у Вас особые предпочтения по еде?</label>
- <div class="radio-group">
- <label><input type="radio" name="food" value="Нет" required> Нет</label>
- <label><input type="radio" name="food" value="Ем мясо"> Ем мясо</label>
- <label><input type="radio" name="food" value="Ем рыбу"> Ем рыбу</label>
- <label><input type="radio" name="food" value="Вегетарианец"> Вегетарианец</label>
- </div>
- </div>
- <div class="form-group">
- <label>Какой алкоголь Вы предпочитаете?</label>
- <div class="checkbox-group">
- <label><input type="checkbox" name="alcohol" value="Красное вино"> Красное вино</label>
- <label><input type="checkbox" name="alcohol" value="Белое вино"> Белое вино</label>
- <label><input type="checkbox" name="alcohol" value="Шампанское"> Шампанское</label>
- <label><input type="checkbox" name="alcohol" value="Виски"> Виски</label>
- <label><input type="checkbox" name="alcohol" value="Коньяк"> Коньяк</label>
- <label><input type="checkbox" name="alcohol" value="Водка"> Водка</label>
- <label><input type="checkbox" name="alcohol" value="Не пью алкоголь"> Не пью алкоголь</label>
- </div>
- </div>
- <button type="submit" class="submit-btn">Отправить</button>
- </form>
- </section>
- <section class="block-img">
- <a href="https://max.ru/join/ka_KnlAMCT4--zsW_9v6udDWBo0-tc-OCQ0Ywg9cY-c" target="_blank" rel="noopene <img src="foto8.png" alt="Наша группа">
- </a>
- </section>
- <section class="block-img">
- <img src="foto9 (2).png" alt="Фото 10">
- </section>
- <div class="music-player" id="music-container">
- <audio id="bg-music" src="music.mp3" loop></audio>
- <button class="play-btn" id="play-button">
- <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
- <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h </button>
- </div>
- <script>
- // Музыка
- const music = document.getElementById('bg-music');
- const button = document.getElementById('play-button');
- const playIcon = document.getElementById('play-icon');
- const pauseIcon = document.getElementById('pause-icon');
- button.addEventListener('click', () => {
- if (music.paused) {
- music.play().catch(e => console.log(e));
- playIcon.style.display = 'none';
- pauseIcon.style.display = 'block';
- button.classList.add('playing');
- } else {
- music.pause();
- playIcon.style.display = 'block';
- pauseIcon.style.display = 'none';
- button.classList.remove('playing');
- }
- });
- // Моментальная отправка без ожидания ответа
- document.getElementById('wedding-form').addEventListener('submit', function(e) {
- e.preventDefault();
- const name = document.getElementById('name').value;
- const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
- const attendance = attendanceRadio ? attendanceRadio.value : 'Не указано';
- const foodRadio = document.querySelector('input[name="food"]:checked');
- const food = foodRadio ? foodRadio.value : 'Не указано';
- const alcoholCheckboxes = document.querySelectorAll('input[name="alcohol"]:checked');
- const alcoholList = [];
- alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
- const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
- const message = `ὑ Новый ответ на приглашение!\n\n` +
- `὆ Имя: ${name}\n` +
- `Ὄ Присутствие: ${attendance}\n` +
- `ἷ Еда: ${food}\n` +
- `ἷ Алкоголь: ${alcohol}`;
- const token = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
- const chatId = '920557253';
+    <section class="block-img">
+        <img src="foto1.png" alt="Фото 1">
+    </section>
 
- // Отправляем анонимный фоновый запрос через системный маяк (Beacon)
- // Браузеры пропускают его мгновенно и не блокируют CORS-защитой
- const url = `https://api.telegram.org/bot${token}/sendMessage`;
- const data = JSON.stringify({ chat_id: chatId, text: message });
- const blob = new Blob([data], { type: 'application/json' });
- navigator.sendBeacon(url, blob);
- // МГНОВЕННО выдаем окно успеха гостю, очищаем поля и ничего не ждем!
- alert('Спасибо! Ваши ответы успешно отправлены.');
- document.getElementById('wedding-form').reset();
- });
- </script>
+    <section class="block-img">
+        <img src="foto2.png" alt="Фото 2">
+    </section>
+
+    <section class="block-img">
+        <a href="https://yandex.ru/maps/org/sherri/1059834533/?ll=39.731542%2C54.632711&z=16" target="_blank" rel="noopener noreferrer">
+            <img src="foto3.png" alt="Адрес на карте">
+        </a>
+    </section>
+
+    <section class="block-img">
+        <img src="foto4.png" alt="Фото 4">
+    </section>
+
+    <section class="block-img">
+        <img src="foto5.png" alt="Фото 5">
+    </section>
+
+    <section class="block-img">
+        <img src="foto6.png" alt="Фото 6">
+    </section>
+
+    <section class="block-img">
+        <img src="foto7.png" alt="Фото 7">
+    </section>
+
+    <section class="block-form">
+        <form id="wedding-form">
+            
+            <div class="form-group">
+                <label for="name">Напишите имя и фамилию</label>
+                <input type="text" id="name" required placeholder="Ваше имя">
+            </div>
+
+            <div class="form-group">
+                <label>Сможете ли присутствовать на свадьбе?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="attendance" value="С удовольствием приду" required> С удовольствием приду</label>
+                    <label><input type="radio" name="attendance" value="К сожалению, не смогу"> К сожалению, не смогу</label>
+                    <label><input type="radio" name="attendance" value="Сообщу позже"> Сообщу позже</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Есть ли у Вас особые предпочтения по еде?</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="food" value="Нет" required> Нет</label>
+                    <label><input type="radio" name="food" value="Ем мясо"> Ем мясо</label>
+                    <label><input type="radio" name="food" value="Ем рыбу"> Ем рыбу</label>
+                    <label><input type="radio" name="food" value="Вегетарианец"> Вегетарианец</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Какой алкоголь Вы предпочитаете?</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="alcohol" value="Красное вино"> Красное вино</label>
+                    <label><input type="checkbox" name="alcohol" value="Белое вино"> Белое вино</label>
+                    <label><input type="checkbox" name="alcohol" value="Шампанское"> Шампанское</label>
+                    <label><input type="checkbox" name="alcohol" value="Виски"> Виски</label>
+                    <label><input type="checkbox" name="alcohol" value="Коньяк"> Коньяк</label>
+                    <label><input type="checkbox" name="alcohol" value="Водка"> Водка</label>
+                    <label><input type="checkbox" name="alcohol" value="Не пью алкоголь"> Не пью алкоголь</label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Отправить</button>
+        </form>
+    </section>
+
+    <section class="block-img">
+        <a href="https://max.ru/join/ka_KnlAMCT4--zsW_9v6udDWBo0-tc-OCQ0Ywg9cY-c" target="_blank" rel="noopener noreferrer">
+            <img src="foto8.png" alt="Наша группа">
+        </a>
+    </section>
+
+    <section class="block-img">
+        <img src="foto9 (2).png" alt="Фото 10">
+    </section>
+
+    <div class="music-player" id="music-container">
+        <audio id="bg-music" src="music.mp3" loop></audio>
+        <button class="play-btn" id="play-button">
+            <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+    </div>
+
+    <script>
+        // Музыка
+        const music = document.getElementById('bg-music');
+        const button = document.getElementById('play-button');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        button.addEventListener('click', () => {
+            if (music.paused) {
+                music.play().catch(e => console.log(e));
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                button.classList.add('playing');
+            } else {
+                music.pause();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+                button.classList.remove('playing');
+            }
+        });
+
+        // Моментальная отправка без ожидания ответа
+        document.getElementById('wedding-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
+            const attendance = attendanceRadio ? attendanceRadio.value : 'Не указано';
+
+            const foodRadio = document.querySelector('input[name="food"]:checked');
+            const food = foodRadio ? foodRadio.value : 'Не указано';
+
+            const alcoholCheckboxes = document.querySelectorAll('input[name="alcohol"]:checked');
+            const alcoholList = [];
+            alcoholCheckboxes.forEach(cb => alcoholList.push(cb.value));
+            const alcohol = alcoholList.length > 0 ? alcoholList.join(', ') : 'Не выбрано';
+
+            const message = `🔔 Новый ответ на приглашение!\n\n` +
+                            `👤 Имя: ${name}\n` +
+                            `📅 Присутствие: ${attendance}\n` +
+                            `🍲 Еда: ${food}\n` +
+                            `🍷 Алкоголь: ${alcohol}`;
+
+            const token = '8757161572:AAEmqgBp2W04FYKQSExYf2_FJdZC8-BJ-ww';
+            const chatId = '920557253';
+            
+            // Отправляем анонимный фоновый запрос через системный маяк (Beacon)
+            // Браузеры пропускают его мгновенно и не блокируют CORS-защитой
+            const url = `https://api.telegram.org/bot${token}/sendMessage`;
+            const data = JSON.stringify({ chat_id: chatId, text: message });
+            const blob = new Blob([data], { type: 'application/json' });
+            navigator.sendBeacon(url, blob);
+
+            // МГНОВЕННО выдаем окно успеха гостю, очищаем поля и ничего не ждем!
+            alert('Спасибо! Ваши ответы успешно отправлены.');
+            document.getElementById('wedding-form').reset();
+        });
+    </script>
 </body>
 </html>
